@@ -736,5 +736,131 @@ Each step is handled by a specialist with specific permissions.
 -->
 
 ---
+transition: slide-left
+---
+
+# Success: <span style="color: var(--vivid-green)">Vibecoding Go</span> Without Knowing Go
+
+<div class="grid grid-cols-4 gap-4 my-6 text-center">
+<div style="border: 1px solid var(--vivid-green); border-radius: 12px; padding: 1.2em 0.5em;">
+<div style="font-size: 2.4em; font-weight: 800; color: var(--vivid-green); line-height: 1;">22</div>
+<div style="color: var(--vivid-muted); font-size: 0.85em; margin-top: 0.3em;">Merged PRs</div>
+</div>
+<div style="border: 1px solid var(--vivid-blue); border-radius: 12px; padding: 1.2em 0.5em;">
+<div style="font-size: 2.4em; font-weight: 800; color: var(--vivid-blue); line-height: 1;">3</div>
+<div style="color: var(--vivid-muted); font-size: 0.85em; margin-top: 0.3em;">Go Repositories</div>
+</div>
+<div style="border: 1px solid var(--vivid-orange); border-radius: 12px; padding: 1.2em 0.5em;">
+<div style="font-size: 2.4em; font-weight: 800; color: var(--vivid-orange); line-height: 1;">~4</div>
+<div style="color: var(--vivid-muted); font-size: 0.85em; margin-top: 0.3em;">Weeks</div>
+</div>
+<div style="border: 1px solid var(--vivid-red); border-radius: 12px; padding: 1.2em 0.5em;">
+<div style="font-size: 2.4em; font-weight: 800; color: var(--vivid-red); line-height: 1;">0</div>
+<div style="color: var(--vivid-muted); font-size: 0.85em; margin-top: 0.3em;">Prior Go Knowledge</div>
+</div>
+</div>
+
+<h3 style="color: var(--vivid-purple); font-weight: 400; margin-bottom: 0.8em;">
+"Omni in Slack" — AI assistant integration across 3 Go services
+</h3>
+
+<v-clicks>
+
+- **Streaming AI delivery pipeline** — real-time token streaming to Slack
+- **Slack Block Kit conversion** from protobuf — rich message formatting
+- **Citation resolver** — deep links back into the Outreach application
+- **Multi-org switching** with Slack modals — cross-tenant UX
+- **Identity store race condition** fixes — concurrency bugs in production
+- **Full rebrand** — Ask Outreach &rarr; Omni across all services
+
+</v-clicks>
+
+<!--
+Speaker notes:
+
+This is the proof it works. Let the numbers sink in first.
+
+22 merged PRs across 3 Go repositories in about 4 weeks — with zero
+prior Go knowledge. Not "some Go" — literally none.
+
+The feature being built was "Omni in Slack" — an AI assistant that
+integrates into Slack for Outreach customers. It involved streaming
+AI responses in real-time, converting protobuf messages to Slack's
+Block Kit format, resolving citations as deep links, and handling
+multi-org Slack workspaces.
+
+The work wasn't trivial. It included fixing race conditions in an
+identity store — the kind of concurrency bug that trips up experienced
+Go developers. The village model made this possible because the AI
+knows Go idioms even if the developer doesn't.
+
+And the full rebrand (Ask Outreach → Omni) touched every service,
+every string, every API endpoint. The kind of tedious multi-file
+rename that's perfect for an AI agent with a structured task list.
+-->
+
+---
+transition: slide-left
+---
+
+# Why the <span style="color: var(--vivid-cyan)">Village</span> Helped
+
+<div class="grid grid-cols-[1fr_1fr] gap-6">
+<div>
+
+<v-clicks>
+
+- <span style="color: var(--vivid-purple)">**Mayor**</span> decomposed a complex multi-repo epic into small, reviewable beads
+- <span style="color: var(--vivid-blue)">**Worker**</span> handled Go idioms — the AI knows Go even if *you* don't
+- <span style="color: var(--vivid-orange)">**Inspector**</span> caught scope creep and regressions before CI
+- <span style="color: var(--vivid-green)">**Guard**</span> ran all Go tests (*860+ per package*) mechanically
+- **Structured handoffs** prevented "yolo shipping" to production
+- <span style="color: var(--vivid-cyan)">**Beads**</span> preserved context across dozens of sessions
+
+</v-clicks>
+
+</div>
+<div>
+
+<Placeholder label="Screenshot: GitHub PR list showing merged Go PRs" height="280px" />
+
+</div>
+</div>
+
+<div class="mt-4 text-sm" style="color: var(--vivid-muted)">
+No single agent could have done this. Each role contributed its speciality to a language the developer had never written.
+</div>
+
+<!--
+Speaker notes:
+
+This slide maps the success directly back to the village model.
+
+The Mayor turned a vague requirement ("integrate Omni into Slack") into
+structured beads with clear acceptance criteria. Without this, the Worker
+would have been wandering.
+
+The Worker wrote Go code using the AI's built-in knowledge of Go idioms,
+error handling patterns, goroutine safety. The developer just needed to
+describe WHAT they wanted — the Worker knew HOW to express it in Go.
+
+The Inspector was critical for a language the developer didn't know.
+It caught non-idiomatic patterns, potential nil pointer dereferences,
+and scope creep where the Worker tried to "improve" existing code.
+
+The Guard ran 860+ tests per package. Every single time. Mechanically.
+No "I'll skip the slow tests this time." This is where bugs in concurrent
+code were caught — tests that the developer might not have run locally.
+
+The structured handoffs meant nothing went to production without passing
+through Inspector AND Guard. In a language you don't know, this safety
+net is everything.
+
+And beads preserved context across dozens of sessions over 4 weeks.
+Every session started with br prime knowing exactly what was done,
+what was next, and what was blocked. No re-explaining, no "where were we?"
+-->
+
+---
 
 <!-- Subsequent slides will be added by later beads -->
