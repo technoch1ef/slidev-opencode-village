@@ -581,5 +581,160 @@ versioned in git.
 -->
 
 ---
+transition: slide-left
+---
+
+# <span style="color: var(--vivid-yellow)">Slash Commands</span>
+
+<div class="grid grid-cols-[1fr_1fr] gap-6">
+<div>
+
+<v-clicks>
+
+- **`/village:work`** — The main loop: claim bead &rarr; load skills &rarr; implement &rarr; handoff &rarr; repeat
+- **`/village:board`** — ASCII board of current village state: who has what bead, what status
+- **`/village:orphans [fix]`** — Find unassigned beads; pass `fix` to auto-assign them
+- **`/village:envoy <id>`** — Dispatch the Envoy to push branch and open a GitHub PR
+
+</v-clicks>
+
+</div>
+<div>
+
+```bash
+# Start the work loop (as any role)
+/village:work
+
+# See the board at a glance
+/village:board
+# ┌─────────┬──────────┬──────────┐
+# │  open   │ progress │  closed  │
+# ├─────────┼──────────┼──────────┤
+# │ bd-42   │ bd-41    │ bd-40 ✓  │
+# │ bd-43   │          │ bd-39 ✓  │
+# └─────────┴──────────┴──────────┘
+
+# Find & fix orphaned beads
+/village:orphans fix
+
+# Ship it
+/village:envoy bd-41
+```
+
+</div>
+</div>
+
+<div class="mt-4 text-sm" style="color: var(--vivid-muted)">
+Four commands. Each role runs <code>/village:work</code> — the command adapts to the agent's permissions.
+</div>
+
+<!--
+Speaker notes:
+
+There are only four slash commands to learn. That's it.
+
+/village:work is the workhorse — it's the same command for every role.
+When the Mayor runs it, it plans. When the Worker runs it, it implements.
+When the Guard runs it, it runs checks. The command adapts to the agent's
+permission set.
+
+/village:board gives you a quick overview without leaving your terminal.
+It's like a mini kanban board showing who has what.
+
+/village:orphans is a housekeeping command. Sometimes beads get created
+but not assigned — this finds them and optionally fixes the assignment.
+
+/village:envoy is the human-triggered shipping step. You decide when
+to push. The Envoy handles the mechanics.
+-->
+
+---
+transition: slide-left
+---
+
+# <span style="color: var(--vivid-cyan)">Workflow Walkthrough</span> — Idea to PR
+
+```mermaid {scale: 0.62}
+sequenceDiagram
+    participant U as 👤 User
+    participant M as 🏛️ Mayor
+    participant W as 🔨 Worker
+    participant I as 🔍 Inspector
+    participant G as 🛡️ Guard
+    participant E as 📮 Envoy
+
+    U->>M: /village:work — "Add dark mode"
+    activate M
+    M->>M: Research & plan
+    M-->>M: br create epic + 3 child beads
+    deactivate M
+
+    U->>W: /village:work
+    activate W
+    W->>W: village_claim → bd-42
+    W->>W: Load stack-typescript skill
+    W->>W: Implement & git commit
+    W-->>I: Handoff (assignee → inspector)
+    deactivate W
+
+    U->>I: /village:work
+    activate I
+    I->>I: village_claim → bd-42
+    I->>I: Review diff — AC ✓ Scope ✓
+    I-->>G: Approve (assignee → guard)
+    deactivate I
+
+    U->>G: /village:work
+    activate G
+    G->>G: village_claim → bd-42
+    G->>G: Run lint, typecheck, test, build
+    G-->>G: All green ✓ — br close bd-42
+    deactivate G
+
+    Note over W,G: Repeat for bd-43, bd-44...
+
+    U->>E: /village:envoy bd-44
+    activate E
+    E->>E: git push → gh pr create
+    E-->>U: PR #123 opened ✅
+    deactivate E
+```
+
+<div class="mt-2 text-sm" style="color: var(--vivid-muted)">
+One idea &rarr; structured beads &rarr; implemented &rarr; reviewed &rarr; verified &rarr; shipped. No step skipped.
+</div>
+
+<!--
+Speaker notes:
+
+This is the complete lifecycle. Let's walk through it:
+
+Step 1: The user tells the Mayor "Add dark mode". The Mayor researches
+the codebase, creates an epic bead with three child task beads, each
+with acceptance criteria and skill requirements.
+
+Step 2: The user switches to the Worker agent and runs /village:work.
+The Worker claims the first unblocked bead via village_claim, loads
+the stack-typescript skill (because the bead says so), implements the
+change, commits locally, and hands off to the Inspector.
+
+Step 3: The Inspector does a read-only code review. It checks acceptance
+criteria coverage, diff scope, and sniffs for regressions. If everything
+looks good, it approves and hands off to the Guard.
+
+Step 4: The Guard runs the full check matrix — lint, typecheck, tests,
+build. If everything passes, it closes the bead. If something fails,
+it sends the bead back to the Worker with the full error output.
+
+Steps 2-4 repeat for each child bead in the epic.
+
+Step 5: When all beads are closed, the user triggers the Envoy to push
+the branch and create a PR. This is the only step that touches the remote.
+
+The key insight: at no point does a single agent handle the entire lifecycle.
+Each step is handled by a specialist with specific permissions.
+-->
+
+---
 
 <!-- Subsequent slides will be added by later beads -->
