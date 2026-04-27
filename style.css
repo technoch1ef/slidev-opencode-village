@@ -1,0 +1,118 @@
+/*
+ * AstroNvim Vivid — Custom dark theme for Slidev
+ *
+ * Palette source: ~/.config/opencode/themes/astronvim-vivid.json
+ */
+
+:root {
+  /* ── Palette tokens ── */
+  --vivid-bg: #000000;
+  --vivid-text: #ADB0BB;
+  --vivid-muted: #595C66;
+  --vivid-comment: #696C76;
+
+  --vivid-blue: #57b6ff;
+  --vivid-purple: #eba0ff;
+  --vivid-cyan: #5efff5;
+  --vivid-green: #b0ff7f;
+  --vivid-orange: #ffa942;
+  --vivid-red: #ff8191;
+  --vivid-yellow: #ffcf32;
+
+  /* ── Slidev overrides ── */
+  --slidev-theme-primary: var(--vivid-blue);
+  --slidev-theme-cover-background: var(--vivid-bg);
+}
+
+/* ── Global styles ── */
+.slidev-layout {
+  background: var(--vivid-bg);
+  color: var(--vivid-text);
+}
+
+/* Headings */
+.slidev-layout h1 {
+  color: var(--vivid-cyan);
+  font-weight: 700;
+}
+
+.slidev-layout h2 {
+  color: var(--vivid-blue);
+  font-weight: 600;
+}
+
+.slidev-layout h3 {
+  color: var(--vivid-purple);
+  font-weight: 600;
+}
+
+/* Links */
+.slidev-layout a {
+  color: var(--vivid-blue);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.slidev-layout a:hover {
+  color: var(--vivid-cyan);
+}
+
+/* Inline code */
+.slidev-layout code:not(pre code) {
+  background: rgba(87, 182, 255, 0.1);
+  color: var(--vivid-green);
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+/* Code blocks */
+.slidev-layout pre {
+  background: #0a0a0a !important;
+  border: 1px solid var(--vivid-muted);
+  border-radius: 8px;
+}
+
+/* Lists */
+.slidev-layout li::marker {
+  color: var(--vivid-purple);
+}
+
+/* Blockquotes */
+.slidev-layout blockquote {
+  border-left: 3px solid var(--vivid-purple);
+  color: var(--vivid-comment);
+  padding-left: 1em;
+}
+
+/* Bold / emphasis */
+.slidev-layout strong {
+  color: var(--vivid-yellow);
+  font-weight: 700;
+}
+
+.slidev-layout em {
+  color: var(--vivid-orange);
+}
+
+/* ── Slide number ── */
+.slidev-page-number {
+  color: var(--vivid-muted);
+}
+
+/* ── Cover layout ── */
+.slidev-layout.cover,
+.slidev-layout.intro {
+  background: var(--vivid-bg);
+}
+
+.slidev-layout.cover h1 {
+  color: var(--vivid-cyan);
+  font-size: 2.5em;
+  line-height: 1.2;
+}
+
+.slidev-layout.cover p {
+  color: var(--vivid-muted);
+  font-size: 1.2em;
+}
