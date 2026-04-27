@@ -116,3 +116,8 @@
   color: var(--vivid-muted);
   font-size: 1.2em;
 }
+
+/* Hide the slide navigator autocomplete panel */
+.autocomplete-list {
+  display: none !important;
+}
