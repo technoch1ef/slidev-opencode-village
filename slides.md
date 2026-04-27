@@ -100,5 +100,71 @@ Let's see how that works.
 -->
 
 ---
+transition: slide-left
+---
+
+# The Village Model
+
+Separation of concerns via permissions — just like a real team.
+
+```mermaid {scale: 0.72}
+flowchart LR
+  M["Mayor\n(Plan)"]:::mayor
+  W["Worker\n(Build)"]:::worker
+  I["Inspector\n(Review)"]:::inspector
+  G["Guard\n(Verify)"]:::guard
+  E["Envoy\n(Ship)"]:::envoy
+
+  M -->|"assigns bead"| W
+  W -->|"hands off"| I
+  I -->|"approves"| G
+  G -->|"passes"| E
+
+  I -.->|"changes requested"| W
+  G -.->|"checks failed"| W
+  I -.->|"out of scope"| M
+
+  classDef mayor fill:#7c3aed,stroke:#a78bfa,color:#fff
+  classDef worker fill:#2563eb,stroke:#60a5fa,color:#fff
+  classDef inspector fill:#d97706,stroke:#fbbf24,color:#fff
+  classDef guard fill:#059669,stroke:#34d399,color:#fff
+  classDef envoy fill:#dc2626,stroke:#f87171,color:#fff
+```
+
+<!--
+The key insight: each agent can only do what its role allows. Workers can't push, inspectors can't edit, guards can't write code. This creates natural checks and balances — just like a well-run engineering team.
+-->
+
+---
+transition: slide-left
+---
+
+# Permission Matrix
+
+What each agent **can** and **can't** do:
+
+<div class="mt-4">
+
+| Capability | <span style="color: var(--vivid-purple)">Mayor</span> | <span style="color: var(--vivid-blue)">Worker</span> | <span style="color: var(--vivid-orange)">Inspector</span> | <span style="color: var(--vivid-green)">Guard</span> | <span style="color: var(--vivid-red)">Envoy</span> |
+|:-----------|:-----:|:------:|:---------:|:-----:|:-----:|
+| Read code | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Edit files | ❌ | ✅ | ❌ | ❌ | ❌ |
+| Local commits | ❌ | ✅ | ❌ | ❌ | ❌ |
+| Run tests / lint | ❌ | ❌ | ❌ | ✅ | ❌ |
+| Git push | ❌ | ❌ | ❌ | ❌ | ✅ |
+| Create beads | ✅ | ❌ | ❌ | ❌ | ❌ |
+| Open PRs | ❌ | ❌ | ❌ | ❌ | ✅ |
+
+</div>
+
+<div class="mt-6 text-sm" style="color: var(--vivid-muted)">
+  Permissions are enforced by agent system prompts — not trust, but design.
+</div>
+
+<!--
+This is the secret sauce of the village model. By constraining what each agent CAN do, we get reliable separation of concerns. The worker can't accidentally push broken code. The inspector can't "just fix it" and skip review. The guard must run the actual checks.
+-->
+
+---
 
 <!-- Subsequent slides will be added by later beads -->
