@@ -862,5 +862,85 @@ what was next, and what was blocked. No re-explaining, no "where were we?"
 -->
 
 ---
+transition: slide-left
+---
+
+# <span style="color: var(--vivid-orange)">Drawbacks</span> & Honest Takes
+
+<div class="grid grid-cols-3 gap-5 my-4">
+<div style="border: 1px solid var(--vivid-red); border-radius: 12px; padding: 1em;">
+<div style="font-size: 1.1em; font-weight: 700; color: var(--vivid-red); margin-bottom: 0.5em;">Token Usage</div>
+<div style="font-size: 2em; font-weight: 800; color: var(--vivid-red); line-height: 1;">3–5x</div>
+<div style="color: var(--vivid-muted); font-size: 0.8em; margin-top: 0.3em;">more tokens than single-agent</div>
+
+<v-clicks>
+
+- Multiple context windows (one per role)
+- Handoffs reload beads, skills, diff
+- Inspector + guard burn tokens on "obvious" code
+
+</v-clicks>
+
+</div>
+<div style="border: 1px solid var(--vivid-orange); border-radius: 12px; padding: 1em;">
+<div style="font-size: 1.1em; font-weight: 700; color: var(--vivid-orange); margin-bottom: 0.5em;">Speed</div>
+<div style="font-size: 2em; font-weight: 800; color: var(--vivid-orange); line-height: 1;">10–15 min</div>
+<div style="color: var(--vivid-muted); font-size: 0.8em; margin-top: 0.3em;">per bead (vs 2–5 min single-agent)</div>
+
+<v-clicks>
+
+- Sequential pipeline is inherently slower
+- Worker &rarr; Inspector &rarr; Guard = 3 sessions
+- Speed scales with number of beads
+
+</v-clicks>
+
+</div>
+<div style="border: 1px solid var(--vivid-green); border-radius: 12px; padding: 1em;">
+<div style="font-size: 1.1em; font-weight: 700; color: var(--vivid-green); margin-bottom: 0.5em;">The Tradeoff</div>
+<div style="font-size: 1.4em; font-weight: 700; color: var(--vivid-green); line-height: 1.2; margin-top: 0.2em;">Quality vs Speed</div>
+<div style="color: var(--vivid-muted); font-size: 0.8em; margin-top: 0.3em;">a conscious choice, not a bug</div>
+
+<v-clicks>
+
+- Worth it for complex, multi-repo work
+- Overkill for one-liner fixes
+- Configurable — skip inspector/guard when trivial
+
+</v-clicks>
+
+</div>
+</div>
+
+<div class="mt-2 text-sm" style="color: var(--vivid-muted)">
+Honest cost: more tokens, slower pipeline. Honest benefit: fewer production incidents, full audit trail, language-agnostic safety net.
+</div>
+
+<!--
+Speaker notes:
+
+This is the honesty slide. I put it here deliberately — right after the
+success story — because credibility comes from acknowledging the costs.
+
+Token usage: the village burns roughly 3-5x the tokens of a single agent
+for the same output. Every handoff reloads context: beads state, skill
+instructions, the relevant diff. Inspector and guard sessions add cost
+even when the code is straightforward.
+
+Speed: a single bead takes 10-15 minutes through the full pipeline.
+Worker implements (3-5 min), Inspector reviews (2-3 min), Guard runs
+checks (3-5 min). A single agent could do all three in 2-5 minutes —
+but without the quality assurance.
+
+The tradeoff is conscious. For complex features — like the Go work
+we just talked about — the safety net is absolutely worth it. For a
+one-liner typo fix, it's overkill. The workflow is configurable:
+you can skip Inspector and Guard for trivial changes.
+
+Frame this as "right tool for the job" — not every task needs the
+full pipeline.
+-->
+
+---
 
 <!-- Subsequent slides will be added by later beads -->
