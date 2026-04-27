@@ -397,5 +397,189 @@ It handles the mechanics of pushing and PR creation so you don't have to.
 -->
 
 ---
+transition: slide-left
+---
+
+# What Are <span style="color: var(--vivid-green)">Beads</span>?
+
+<div class="grid grid-cols-[1fr_1fr] gap-6">
+<div>
+
+<v-clicks>
+
+- **Git-native, AI-first issue tracker** — issues live inside the repo in `.beads/`
+- **SQLite locally**, synced to JSONL for git versioning — no external API needed
+- **Issue types:** task, bug, feature, epic, chore, decision, question, docs
+- **Priority levels:** P0 (critical) &rarr; P4 (backlog)
+- **Rich dependencies:** blocks, parent-child, discovered-from
+- **Issues travel with the code** — clone the repo, get the full project history
+
+</v-clicks>
+
+</div>
+<div>
+
+```bash
+# Create a task
+br create --title="Add auth middleware" \
+  --type=task --priority=2
+
+# See what's ready to work on
+br ready
+
+# Show details
+br show bd-42
+
+# Close when done
+br close bd-42 --reason="Implemented"
+```
+
+</div>
+</div>
+
+<div class="mt-4 text-sm" style="color: var(--vivid-muted)">
+<code>.beads/</code> &rarr; SQLite + JSONL &rarr; <code>git add .beads/ && git commit</code> &rarr; issues travel with every clone
+</div>
+
+<!--
+Speaker notes:
+
+Beads is the backbone of the village. Without it, agents have no shared
+task list — they'd need an external tool like Jira or Linear.
+
+The key insight: issues should live WHERE the code lives. When you clone
+a repo, you get the issues. When you branch, you can branch the issues.
+When you merge, the issues merge.
+
+SQLite gives you fast local queries. JSONL gives you git-friendly diffs.
+br sync --flush-only exports SQLite to JSONL so git can track changes.
+
+The dependency system is crucial for the village: blocks relationships
+let br ready show only unblocked work, so agents don't waste time on
+tasks that can't be started yet.
+-->
+
+---
+transition: slide-left
+---
+
+# <span style="color: var(--vivid-cyan)">Context Preservation</span> — br prime
+
+<div class="grid grid-cols-[1fr_1fr] gap-6">
+<div>
+
+<v-clicks>
+
+- **The problem:** AI sessions have limited context windows — *compaction kills memory*
+- **`br prime`** outputs an AI-optimised summary of all beads state
+- **Auto-injected** by the opencode-beads-rust plugin on session start **and** after compaction
+- **This is the "memory"** that ties agents across sessions together
+- **Discovery chains:** agent finds bug while working on feature &rarr; links with `discovered-from` &rarr; future agents see the full context
+
+</v-clicks>
+
+</div>
+<div>
+
+```bash
+# What br prime outputs:
+$ br prime
+
+# ── Active Beads ──
+# bd-139 [epic] P1 open
+#   Build OpenCode Village Presentation
+#
+# bd-139.5 [task] P1 in_progress
+#   Beads + Context Preservation slides
+#   blocked-by: bd-139.4 (closed ✓)
+#   blocks: bd-139.6
+#
+# ── Summary ──
+# 3 open | 4 closed | 1 in_progress
+```
+
+</div>
+</div>
+
+<div class="mt-4 text-sm" style="color: var(--vivid-muted)">
+Session starts &rarr; <code>br prime</code> auto-injected &rarr; agent has full project memory &rarr; compaction happens &rarr; <code>br prime</code> re-injected
+</div>
+
+<!--
+Speaker notes:
+
+This is arguably the most important slide. It answers the question:
+"How do different AI sessions share knowledge?"
+
+Without br prime, every new session starts from zero. The agent has to
+re-discover what's been done, what's blocked, what's in progress.
+
+With br prime, the first thing the agent sees is a structured summary
+of all beads — priorities, statuses, dependencies, and discovery chains.
+
+The discovery chain feature is especially powerful. Say a Worker is
+implementing a feature and discovers a bug. It creates a new bead with
+discovered-from linking back to the original feature bead. When a future
+agent runs br prime, it sees that relationship and understands WHY
+that bug bead exists.
+
+The plugin handles injection automatically — you don't need to remember
+to run br prime manually. It just works.
+-->
+
+---
+transition: slide-left
+---
+
+# <span style="color: var(--vivid-green)">beads_viewer</span> (bv) — Interactive TUI
+
+<div class="grid grid-cols-[1fr_1fr] gap-6">
+<div>
+
+<v-clicks>
+
+- **Terminal UI** for browsing issues interactively
+- **Board view** — see all issues by status at a glance
+- **Dependency graph** — visualise which issues block which
+- **Agents use `br` CLI** with `--json` for structured data
+- **Humans use `bv`** for visual exploration and triage
+- **Same data, different interface** — SQLite underneath both
+
+</v-clicks>
+
+</div>
+<div>
+
+<Placeholder label="Screenshot: beads_viewer board with issues by status" height="160px" />
+
+<Placeholder label="Screenshot: beads_viewer dependency graph" height="160px" />
+
+</div>
+</div>
+
+<div class="mt-4 text-sm" style="color: var(--vivid-muted)">
+Agents: <code>br show bd-42 --json</code> &nbsp;|&nbsp; Humans: <code>bv</code> &rarr; interactive board &amp; graph
+</div>
+
+<!--
+Speaker notes:
+
+beads_viewer is the human-friendly interface to the same data.
+While agents interact with beads through the br CLI (especially with --json
+for structured output), humans get a full terminal UI.
+
+The board view shows issues grouped by status — open, in_progress, blocked,
+closed. You can filter by type, priority, or assignee.
+
+The dependency graph is particularly useful for epics: you can see at a
+glance which tasks are done, which are in progress, and which are still
+blocked waiting for their dependencies.
+
+The key insight: agents and humans work with the same underlying data.
+There's no sync problem, no "source of truth" debate. It's all in .beads/,
+versioned in git.
+-->
+
+---
 
 <!-- Subsequent slides will be added by later beads -->
