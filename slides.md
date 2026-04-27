@@ -200,7 +200,7 @@ transition: slide-left
 </div>
 <div>
 
-<Placeholder label="Screenshot: Mayor creating beads in OpenCode" height="240px" />
+<img src="/001-mayor-creating-beads.png" alt="Mayor creating beads in OpenCode" style="max-height: 240px; border-radius: 8px; border: 1px solid var(--vivid-muted);" />
 
 </div>
 </div>
@@ -245,7 +245,7 @@ transition: slide-left
 </div>
 <div>
 
-<Placeholder label="Screenshot: Worker implementing a bead" height="240px" />
+<img src="/002-worker-implementing-bead.png" alt="Worker implementing a bead" style="max-height: 240px; border-radius: 8px; border: 1px solid var(--vivid-muted);" />
 
 </div>
 </div>
@@ -293,7 +293,7 @@ transition: slide-left
 </div>
 <div>
 
-<Placeholder label="Screenshot: Inspector reviewing a diff" height="240px" />
+<img src="/003-inspector-review.png" alt="Inspector reviewing a diff" style="max-height: 240px; border-radius: 8px; border: 1px solid var(--vivid-muted);" />
 
 </div>
 </div>
@@ -338,7 +338,7 @@ transition: slide-left
 </div>
 <div>
 
-<Placeholder label="Screenshot: Guard running check matrix" height="240px" />
+<img src="/004-guard-check.png" alt="Guard running check matrix" style="max-height: 240px; border-radius: 8px; border: 1px solid var(--vivid-muted);" />
 
 </div>
 </div>
@@ -384,7 +384,7 @@ transition: slide-left
 </div>
 <div>
 
-<Placeholder label="Screenshot: PR created by Envoy" height="240px" />
+<img src="/005-envoy-pull-request.png" alt="PR created by Envoy" style="max-height: 240px; border-radius: 8px; border: 1px solid var(--vivid-muted);" />
 
 </div>
 </div>
@@ -563,9 +563,7 @@ transition: slide-left
 </div>
 <div>
 
-<Placeholder label="Screenshot: beads_viewer board with issues by status" height="160px" />
-
-<Placeholder label="Screenshot: beads_viewer dependency graph" height="160px" />
+<img src="/006-bead-viewer.png" alt="beads_viewer board with issues by status" style="max-height: 340px; border-radius: 8px; border: 1px solid var(--vivid-muted);" />
 
 </div>
 </div>
@@ -803,7 +801,7 @@ transition: slide-left
 </div>
 <div>
 
-<Placeholder label="Screenshot: GitHub PR list showing merged Go PRs" height="280px" />
+<img src="/007-agentic-pr-list.png" alt="GitHub PR list showing merged Go PRs" style="max-height: 280px; border-radius: 8px; border: 1px solid var(--vivid-muted);" />
 
 </div>
 </div>
@@ -945,9 +943,15 @@ transition: slide-left
 </div>
 <div class="flex flex-col gap-4 items-center justify-center">
 
-<Placeholder label="QR: opencode-village repo" height="160px" width="180px" />
+<div class="text-center">
+<img src="/qr-opencode-village.svg" alt="QR: opencode-village repo" style="height: 140px; width: 140px; filter: invert(1); background: transparent;" />
+<div style="color: var(--vivid-muted); font-size: 0.75em; margin-top: 0.3em;">opencode-village</div>
+</div>
 
-<Placeholder label="QR: opencode-beads-rust repo" height="160px" width="180px" />
+<div class="text-center">
+<img src="/qr-opencode-beads-rust.svg" alt="QR: opencode-beads-rust repo" style="height: 140px; width: 140px; filter: invert(1); background: transparent;" />
+<div style="color: var(--vivid-muted); font-size: 0.75em; margin-top: 0.3em;">opencode-beads-rust</div>
+</div>
 
 </div>
 </div>
