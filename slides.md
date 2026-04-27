@@ -104,9 +104,11 @@ transition: slide-left
 
 # The Village Model
 
+<h3 style="color: var(--vivid-orange); font-weight: 400; margin-bottom: 0.8em;">
 Separation of concerns via permissions — just like a real team.
+</h3>
 
-```mermaid {scale: 0.72}
+```mermaid {scale: 0.68}
 flowchart LR
   M["Mayor\n(Plan)"]:::mayor
   W["Worker\n(Build)"]:::worker
@@ -129,6 +131,18 @@ flowchart LR
   classDef guard fill:#059669,stroke:#34d399,color:#fff
   classDef envoy fill:#dc2626,stroke:#f87171,color:#fff
 ```
+
+<div class="grid grid-cols-5 gap-3 mt-2 text-center text-xs">
+<div><span style="color: var(--vivid-purple); font-weight: 700;">Mayor</span><br/><span style="color: var(--vivid-muted);">Plans & creates beads</span></div>
+<div><span style="color: var(--vivid-blue); font-weight: 700;">Worker</span><br/><span style="color: var(--vivid-muted);">Edits code & commits</span></div>
+<div><span style="color: var(--vivid-orange); font-weight: 700;">Inspector</span><br/><span style="color: var(--vivid-muted);">Read-only code review</span></div>
+<div><span style="color: var(--vivid-green); font-weight: 700;">Guard</span><br/><span style="color: var(--vivid-muted);">Runs lint, test, build</span></div>
+<div><span style="color: var(--vivid-red); font-weight: 700;">Envoy</span><br/><span style="color: var(--vivid-muted);">Pushes & opens PRs</span></div>
+</div>
+
+<div class="mt-4 text-sm" style="color: var(--vivid-muted)">
+Each agent can <strong style="color: var(--vivid-yellow);">only</strong> do what its role allows. Workers can't push, inspectors can't edit, guards can't write code — natural checks and balances.
+</div>
 
 <!--
 The key insight: each agent can only do what its role allows. Workers can't push, inspectors can't edit, guards can't write code. This creates natural checks and balances — just like a well-run engineering team.
@@ -653,85 +667,53 @@ transition: slide-left
 
 # <span style="color: var(--vivid-cyan)">Workflow Walkthrough</span> — Idea to PR
 
-```mermaid {scale: 0.62}
-sequenceDiagram
-    participant U as 👤 User
-    participant M as 🏛️ Mayor
-    participant W as 🔨 Worker
-    participant I as 🔍 Inspector
-    participant G as 🛡️ Guard
-    participant E as 📮 Envoy
+<h3 style="color: var(--vivid-orange); font-weight: 400; margin-bottom: 0.6em;">
+Every role runs <code>/village:work</code> — the command adapts to the agent's permissions.
+</h3>
 
-    U->>M: /village:work — "Add dark mode"
-    activate M
-    M->>M: Research & plan
-    M-->>M: br create epic + 3 child beads
-    deactivate M
+<div class="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 mt-2 text-sm">
 
-    U->>W: /village:work
-    activate W
-    W->>W: village_claim → bd-42
-    W->>W: Load stack-typescript skill
-    W->>W: Implement & git commit
-    W-->>I: Handoff (assignee → inspector)
-    deactivate W
+<div style="color: var(--vivid-purple); font-weight: 700; white-space: nowrap;">① Plan</div>
+<div>User tells Mayor <em>"Add dark mode"</em> → Mayor creates epic + 3 child beads with AC & skills</div>
 
-    U->>I: /village:work
-    activate I
-    I->>I: village_claim → bd-42
-    I->>I: Review diff — AC ✓ Scope ✓
-    I-->>G: Approve (assignee → guard)
-    deactivate I
+<div style="color: var(--vivid-blue); font-weight: 700; white-space: nowrap;">② Build</div>
+<div>Worker runs <code>/village:work</code> → <code>village_claim</code> picks bd-42 → loads <code>stack-typescript</code> → implements → <code>git commit</code> → hands off to Inspector</div>
 
-    U->>G: /village:work
-    activate G
-    G->>G: village_claim → bd-42
-    G->>G: Run lint, typecheck, test, build
-    G-->>G: All green ✓ — br close bd-42
-    deactivate G
+<div style="color: var(--vivid-orange); font-weight: 700; white-space: nowrap;">③ Review</div>
+<div>Inspector runs <code>/village:work</code> → claims bd-42 → checks AC coverage, diff scope, regression sniff → approves → hands off to Guard</div>
 
-    Note over W,G: Repeat for bd-43, bd-44...
+<div style="color: var(--vivid-green); font-weight: 700; white-space: nowrap;">④ Verify</div>
+<div>Guard runs <code>/village:work</code> → claims bd-42 → runs <code>lint</code> → <code>typecheck</code> → <code>test</code> → <code>build</code> → all green → <code>br close bd-42</code></div>
 
-    U->>E: /village:envoy bd-44
-    activate E
-    E->>E: git push → gh pr create
-    E-->>U: PR #123 opened ✅
-    deactivate E
-```
+<div style="color: var(--vivid-muted); font-weight: 700; white-space: nowrap;">⟳ Repeat</div>
+<div style="color: var(--vivid-muted);">Steps ②–④ for each child bead (bd-43, bd-44…) until the epic is complete</div>
 
-<div class="mt-2 text-sm" style="color: var(--vivid-muted)">
-One idea &rarr; structured beads &rarr; implemented &rarr; reviewed &rarr; verified &rarr; shipped. No step skipped.
+<div style="color: var(--vivid-red); font-weight: 700; white-space: nowrap;">⑤ Ship</div>
+<div>User triggers <code>/village:envoy</code> → Envoy pushes branch → <code>gh pr create</code> → PR #123 opened</div>
+
+</div>
+
+<div class="mt-4 text-sm" style="color: var(--vivid-muted)">
+One idea → structured beads → implemented → reviewed → verified → shipped. No step skipped, no single agent handles the full lifecycle.
 </div>
 
 <!--
 Speaker notes:
 
-This is the complete lifecycle. Let's walk through it:
+This is the complete lifecycle — the same five agents from slide 4, now shown in action.
 
-Step 1: The user tells the Mayor "Add dark mode". The Mayor researches
-the codebase, creates an epic bead with three child task beads, each
-with acceptance criteria and skill requirements.
+The user only needs one command: /village:work. It adapts to whichever
+agent is running. Mayor plans, Worker builds, Inspector reviews, Guard verifies.
 
-Step 2: The user switches to the Worker agent and runs /village:work.
-The Worker claims the first unblocked bead via village_claim, loads
-the stack-typescript skill (because the bead says so), implements the
-change, commits locally, and hands off to the Inspector.
+The key is the sequential handoff: no agent can skip a step. The Worker
+can't push (that's the Envoy's job). The Inspector can't edit (it must
+send back to the Worker). The Guard must run ALL checks even if one fails.
 
-Step 3: The Inspector does a read-only code review. It checks acceptance
-criteria coverage, diff scope, and sniffs for regressions. If everything
-looks good, it approves and hands off to the Guard.
+Steps 2-4 repeat for each child bead. When the Guard closes the last
+child, it cascade-closes the parent epic.
 
-Step 4: The Guard runs the full check matrix — lint, typecheck, tests,
-build. If everything passes, it closes the bead. If something fails,
-it sends the bead back to the Worker with the full error output.
-
-Steps 2-4 repeat for each child bead in the epic.
-
-Step 5: When all beads are closed, the user triggers the Envoy to push
-the branch and create a PR. This is the only step that touches the remote.
-
-The key insight: at no point does a single agent handle the entire lifecycle.
-Each step is handled by a specialist with specific permissions.
+Step 5 is human-triggered: you decide when to ship. The Envoy handles
+the mechanics of pushing and PR creation.
 -->
 
 ---
@@ -954,7 +936,6 @@ transition: slide-left
 - <a href="https://github.com/technoch1ef/opencode-village" target="_blank">technoch1ef/opencode-village</a> — Village orchestration plugin
 - <a href="https://github.com/technoch1ef/opencode-beads-rust" target="_blank">technoch1ef/opencode-beads-rust</a> — Beads OpenCode integration
 - <a href="https://github.com/Dicklesworthstone/beads_rust" target="_blank">Dicklesworthstone/beads_rust</a> — Rust CLI issue tracker
-- <a href="https://github.com/opencode-ai/opencode" target="_blank">opencode-ai/opencode</a> — OpenCode project
 
 ### npm Packages
 
@@ -990,8 +971,6 @@ it hooks br prime into session start and compaction events.
 beads_rust is the underlying Rust CLI that powers the issue tracker.
 It's a standalone tool you can use outside of OpenCode too.
 
-And opencode itself is the AI coding assistant that everything runs on.
-
 The npm packages are on the public registry — npm install and go.
 
 I'll generate the QR codes before the actual talk so you can scan them
@@ -1009,15 +988,8 @@ class: text-center
 Questions?
 </div>
 
-<div class="mt-10 text-left mx-auto" style="max-width: 520px;">
-
-| | |
-|:--|:--|
-| <span style="color: var(--vivid-blue)">Village Plugin</span> | [github.com/technoch1ef/opencode-village](https://github.com/technoch1ef/opencode-village) |
-| <span style="color: var(--vivid-green)">Beads Integration</span> | [github.com/technoch1ef/opencode-beads-rust](https://github.com/technoch1ef/opencode-beads-rust) |
-| <span style="color: var(--vivid-orange)">Beads CLI</span> | [github.com/Dicklesworthstone/beads_rust](https://github.com/Dicklesworthstone/beads_rust) |
-| <span style="color: var(--vivid-cyan)">OpenCode</span> | [github.com/opencode-ai/opencode](https://github.com/opencode-ai/opencode) |
-
+<div class="mt-10 flex items-center justify-center gap-6 flex-wrap text-sm">
+<a href="https://github.com/technoch1ef/opencode-village" target="_blank" style="color: var(--vivid-blue)">Village Plugin</a> <span style="color: var(--vivid-comment)">&bull;</span> <a href="https://github.com/technoch1ef/opencode-beads-rust" target="_blank" style="color: var(--vivid-green)">Beads Integration</a> <span style="color: var(--vivid-comment)">&bull;</span> <a href="https://github.com/Dicklesworthstone/beads_rust" target="_blank" style="color: var(--vivid-orange)">Beads CLI</a> <span style="color: var(--vivid-comment)">&bull;</span> <a href="https://github.com/opencode-ai/opencode" target="_blank" style="color: var(--vivid-cyan)">OpenCode</a>
 </div>
 
 <div class="mt-8 text-sm" style="color: var(--vivid-comment)">
@@ -1027,7 +999,7 @@ Oleksandr Ovcharov &bull; oleksandr.ovcharov@outreach.io &bull; @technoch1ef
 <!--
 Speaker notes:
 
-Thank you all for listening. The table has all the key links again
+Thank you all for listening. The key links are shown inline above
 so you can find them easily.
 
 I'm happy to answer any questions about the village model, the beads
