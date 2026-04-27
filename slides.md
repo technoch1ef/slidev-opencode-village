@@ -24,8 +24,7 @@ Role-separated, bead-tracked, skill-driven AI workflow
 </div>
 
 <div class="abs-bl m-6 text-sm" style="color: var(--vivid-comment)">
-<!-- Author placeholder — fill in before presenting -->
-Your Name &bull; April 2026
+Oleksandr Ovcharov &bull; April 2026
 </div>
 
 <!--
@@ -1022,8 +1021,7 @@ Questions?
 </div>
 
 <div class="mt-8 text-sm" style="color: var(--vivid-comment)">
-<!-- Contact placeholder — fill in before presenting -->
-Your Name &bull; your@email.com &bull; @handle
+Oleksandr Ovcharov &bull; oleksandr.ovcharov@outreach.io &bull; @technoch1ef
 </div>
 
 <!--
