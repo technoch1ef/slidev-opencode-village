@@ -942,5 +942,103 @@ full pipeline.
 -->
 
 ---
+transition: slide-left
+---
 
-<!-- Subsequent slides will be added by later beads -->
+# <span style="color: var(--vivid-blue)">Links</span> & Resources
+
+<div class="grid grid-cols-[1fr_1fr] gap-8">
+<div>
+
+### GitHub Repositories
+
+- <a href="https://github.com/technoch1ef/opencode-village" target="_blank">technoch1ef/opencode-village</a> — Village orchestration plugin
+- <a href="https://github.com/technoch1ef/opencode-beads-rust" target="_blank">technoch1ef/opencode-beads-rust</a> — Beads OpenCode integration
+- <a href="https://github.com/Dicklesworthstone/beads_rust" target="_blank">Dicklesworthstone/beads_rust</a> — Rust CLI issue tracker
+- <a href="https://github.com/opencode-ai/opencode" target="_blank">opencode-ai/opencode</a> — OpenCode project
+
+### npm Packages
+
+- <a href="https://www.npmjs.com/package/@technoch1ef/opencode-village" target="_blank">@technoch1ef/opencode-village</a>
+- <a href="https://www.npmjs.com/package/@technoch1ef/opencode-beads-rust" target="_blank">@technoch1ef/opencode-beads-rust</a>
+
+</div>
+<div class="flex flex-col gap-4 items-center justify-center">
+
+<Placeholder label="QR: opencode-village repo" height="160px" width="180px" />
+
+<Placeholder label="QR: opencode-beads-rust repo" height="160px" width="180px" />
+
+</div>
+</div>
+
+<div class="mt-4 text-sm" style="color: var(--vivid-muted)">
+<code>npx @technoch1ef/opencode-village init</code> — get started in 30 seconds
+</div>
+
+<!--
+Speaker notes:
+
+Here are all the links you'll need to get started.
+
+The opencode-village repo is the main plugin — it provides the agents,
+commands, skills, and tools for the village workflow. Install it with
+npx @technoch1ef/opencode-village init.
+
+The opencode-beads-rust repo is the Beads integration for OpenCode —
+it hooks br prime into session start and compaction events.
+
+beads_rust is the underlying Rust CLI that powers the issue tracker.
+It's a standalone tool you can use outside of OpenCode too.
+
+And opencode itself is the AI coding assistant that everything runs on.
+
+The npm packages are on the public registry — npm install and go.
+
+I'll generate the QR codes before the actual talk so you can scan them
+from your seats.
+-->
+
+---
+layout: center
+class: text-center
+---
+
+# <span style="color: var(--vivid-cyan)">Thank You</span>
+
+<div class="mt-6 text-xl" style="color: var(--vivid-purple)">
+Questions?
+</div>
+
+<div class="mt-10 text-left mx-auto" style="max-width: 520px;">
+
+| | |
+|:--|:--|
+| <span style="color: var(--vivid-blue)">Village Plugin</span> | [github.com/technoch1ef/opencode-village](https://github.com/technoch1ef/opencode-village) |
+| <span style="color: var(--vivid-green)">Beads Integration</span> | [github.com/technoch1ef/opencode-beads-rust](https://github.com/technoch1ef/opencode-beads-rust) |
+| <span style="color: var(--vivid-orange)">Beads CLI</span> | [github.com/Dicklesworthstone/beads_rust](https://github.com/Dicklesworthstone/beads_rust) |
+| <span style="color: var(--vivid-cyan)">OpenCode</span> | [github.com/opencode-ai/opencode](https://github.com/opencode-ai/opencode) |
+
+</div>
+
+<div class="mt-8 text-sm" style="color: var(--vivid-comment)">
+<!-- Contact placeholder — fill in before presenting -->
+Your Name &bull; your@email.com &bull; @handle
+</div>
+
+<!--
+Speaker notes:
+
+Thank you all for listening. The table has all the key links again
+so you can find them easily.
+
+I'm happy to answer any questions about the village model, the beads
+system, or how to get started with OpenCode Village in your own projects.
+
+If you're interested in trying it out, the quickest way is:
+npx @technoch1ef/opencode-village init
+
+That sets up all the agents, commands, and skills in your OpenCode
+configuration. From there, create a .beads/ directory with br init,
+and you're ready to go.
+-->
