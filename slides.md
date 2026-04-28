@@ -30,10 +30,16 @@ Oleksandr Ovcharov &bull; April 2026
 <!--
 Speaker notes:
 
-Welcome everyone. Today I'll walk you through OpenCode Village —
-a system that takes the "single autonomous AI" model and replaces it
-with a team of specialised agents, each with clear responsibilities
-and hard permission boundaries.
+Back in February I started thinking about how we use AI coding
+assistants. The agent writes code,
+runs tests, pushes to production. And it works great... until it
+doesn't.
+
+The big insparation behind this was Steve Yegge's "Gas Town".
+I really liekd the idea but I found it too bulky to actually run it locally.
+
+So what I built here is much more lighter orchestration workflow. Let me show you
+what came out of it.
 -->
 
 ---
@@ -95,8 +101,6 @@ one that plans, one that codes, one that reviews, one that tests, and one that s
 
 Each has hard limits on what it can do. They communicate through a shared
 issue tracker (beads), and hand off work to each other.
-
-Let's see how that works.
 -->
 
 ---
@@ -146,7 +150,7 @@ Each agent can <strong style="color: var(--vivid-yellow);">only</strong> do what
 </div>
 
 <!--
-The key insight: each agent can only do what its role allows. Workers can't push, inspectors can't edit, guards can't write code. This creates natural checks and balances — just like a well-run engineering team.
+Each agent can only do what its role allows. Workers can't push, inspectors can't edit, guards can't write code. This creates natural checks and balances — just like a well-run engineering team.
 -->
 
 ---
@@ -176,7 +180,15 @@ What each agent **can** and **can't** do:
 </div>
 
 <!--
-This is the secret sauce of the village model. By constraining what each agent CAN do, we get reliable separation of concerns. The worker can't accidentally push broken code. The inspector can't "just fix it" and skip review. The guard must run the actual checks.
+Speaker notes:
+
+So let's just quickly go through the matrix. Each column shows
+what an agent can and can't do. The worker can edit files and commit,
+but can't push. The inspector can review, but can't change anything.
+The guard runs tests, but can't write code. And only the envoy can
+push to the remote.
+
+It's all enforced by their system prompts — not by trust, but by design.
 -->
 
 ---
@@ -213,6 +225,8 @@ transition: slide-left
 <!--
 Speaker notes:
 
+A little bit about agents I use.
+
 The Mayor is your project manager. *click* It takes a high-level goal
 ("add dark mode support") and breaks it into concrete, implementable
 beads *click* with clear acceptance criteria.
@@ -222,8 +236,8 @@ the planner from "just doing it" and skipping the review pipeline.
 *click* It must delegate.
 
 Every bead the Mayor creates includes a Skills section *click* — this
-tells the Worker which domain skills to load (e.g. stack-typescript,
-stack-solana). This is how the village stays polymorphic across tech stacks.
+tells the Worker which domain skills to load (e.g. stack-typescript, stack-go, stack-rust, stack-ruby-on-rails). 
+This is how the village stays polymorphic across tech stacks.
 -->
 
 ---
@@ -263,9 +277,9 @@ Speaker notes:
 The Worker is the only agent that can edit files *click* and make git
 commits. But it can't push *click* — that's the Envoy's job.
 
-The single in-progress guard *click* prevents the Worker from juggling
-multiple tasks. It must finish (or get blocked on) one bead before
-claiming the next.
+There's one important rule: *click* the Worker can only work on one
+thing at a time. It has to finish what it's doing — or flag it as
+blocked — before picking up the next task.
 
 Skills are loaded dynamically: *click* a Rails bead loads
 stack-ruby-on-rails, a TypeScript bead loads stack-typescript.
@@ -357,11 +371,11 @@ transition: slide-left
 <!--
 Speaker notes:
 
-The Guard is pure automation *click* — no judgment calls, no code changes.
-It loads the same stack skill as the Worker *click* (e.g. stack-typescript)
-and runs every check in the matrix.
+The Guard itself is pure automation *click*.
+It loads the same stack skill as the Worker *click* 
+and runs every check defined by stack.
 
-Key rule: *click* run ALL checks even if one fails. This gives the Worker
+*click* One key rule is that Guard run ALL checks even if one fails. This gives the Worker
 a complete picture on the first bounce-back, *click* instead of playing
 whack-a-mole with one error at a time.
 
@@ -406,7 +420,7 @@ Speaker notes:
 The Envoy is deliberately the ONLY agent that can interact with the
 remote. *click* And it's human-triggered — it won't auto-ship code.
 
-This is the trust boundary: *click* everything up to the Envoy is local.
+*click* Everything up to the Envoy is local.
 You can review all the commits, *click* all the bead history, before
 deciding to ship.
 
@@ -414,9 +428,9 @@ The Envoy's PR template is intentionally minimal: *click* What, Why,
 Closes. No boilerplate, no checklist — that was already handled by the
 Inspector and Guard.
 
-Think of the Envoy as the "merge button" *click* abstracted into an
-agent. It handles the mechanics of pushing and PR creation so you
-don't have to.
+The reason the Envoy exists as a separate agent *click* is so that
+shipping is always a conscious, human-initiated decision. You're never
+surprised by code appearing on the remote.
 -->
 
 ---
@@ -467,20 +481,24 @@ br close bd-42 --reason="Implemented"
 <!--
 Speaker notes:
 
-Beads is the backbone of the village. *click* Without it, agents have
-no shared task list — they'd need an external tool like Jira or Linear.
+By this time I already mentioned beads quite a few times.
+A "bead" is the shared task list makes the whole village work. *click*
+Without it, the agents would need something external like Jira or
+Linear to keep track of what needs doing.
 
-The key insight: *click* issues should live WHERE the code lives. When
-you clone a repo, you get the issues. *click* When you branch, you can
-branch the issues. When you merge, the issues merge.
+The cool part is that issues live right inside your repo. *click* You
+clone the project, you get the issues. Simple as that.
 
-SQLite gives you fast local queries. *click* JSONL gives you git-friendly
-diffs. br sync --flush-only exports SQLite to JSONL so git can track
-changes.
+Under the hood it's a SQLite database for speed, *click* with a text
+export so git can track changes. You don't really need to think about
+that — it just works.
 
-The dependency system is crucial for the village: *click* blocks
-relationships let br ready show only unblocked work, so agents don't
-waste time on tasks that can't be started yet. *click*
+The dependency system is what makes the workflow smooth: *click* when
+one task depends on another, the agents automatically know to work on
+the unblocked ones first. *click* 
+that can't be started yet.
+
+*click* I personally don't commit beads and keep them local, but you can do that if you want.
 -->
 
 ---
@@ -587,21 +605,16 @@ Agents: <code>br show bd-42 --json</code> &nbsp;|&nbsp; Humans: <code>bv</code> 
 <!--
 Speaker notes:
 
-beads_viewer is the human-friendly interface to the same data. *click*
-While agents interact with beads through the br CLI *click* (especially
-with --json for structured output), humans get a full terminal UI.
+I also use `beads_viewer` is the human-friendly interface to the same data. *click*
+While agents interact with beads through the br CLI *click*, humans get a full terminal UI.
 
 The board view *click* shows issues grouped by status — open,
-in_progress, blocked, closed. You can filter by type, priority, or
+in_progress, blocked, closed. *click* You can filter by type, priority, or
 assignee.
 
-The dependency graph *click* is particularly useful for epics: you can
-see at a glance which tasks are done, which are in progress, and which
-are still blocked waiting for their dependencies.
-
-The key insight: *click* agents and humans work with the same underlying
+*click* Agents and people work with the same underlying
 data. There's no sync problem, no "source of truth" debate. *click*
-It's all in .beads/, versioned in git.
+It's all in beads.
 -->
 
 ---
@@ -655,22 +668,20 @@ Four commands. Each role runs <code>/village:work</code> — the command adapts 
 <!--
 Speaker notes:
 
-There are only four slash commands to learn. That's it.
+There are only four slash commands to learn.
 
-/village:work *click* is the workhorse — it's the same command for every
-role. When the Mayor runs it, it plans. When the Worker runs it, it
-implements. When the Guard runs it, it runs checks. The command adapts
-to the agent's permission set.
+`/village:work` *click* is the workhorse. You would use it to run the agents. 
+When the Worker runs it, it implements. When the Guard runs it, it runs checks. 
+The command adapts to the agent's permission set.
 
-/village:board *click* gives you a quick overview without leaving your
+`/village:board` *click* gives you a quick overview without leaving your
 terminal. It's like a mini kanban board showing who has what.
 
-/village:orphans *click* is a housekeeping command. Sometimes beads get
-created but not assigned — this finds them and optionally fixes the
-assignment.
+*click* Sometimes beads get created but not assigned. `/village:orphans` this finds 
+them and  fixes the assignment.
 
-/village:envoy *click* is the human-triggered shipping step. You decide
-when to push. The Envoy handles the mechanics.
+`/village:envoy` *click* is the human-triggered shipping step. You decide
+when to push. The Envoy handles the rest.
 -->
 
 ---
@@ -712,20 +723,18 @@ One idea → structured beads → implemented → reviewed → verified → ship
 <!--
 Speaker notes:
 
-This is the complete lifecycle — the same five agents from slide 4, now shown in action.
+This is the complete lifecycle in action.
 
 The user only needs one command: /village:work. It adapts to whichever
 agent is running. Mayor plans, Worker builds, Inspector reviews, Guard verifies.
 
-The key is the sequential handoff: no agent can skip a step. The Worker
-can't push (that's the Envoy's job). The Inspector can't edit (it must
-send back to the Worker). The Guard must run ALL checks even if one fails.
-
+The key is the sequential handoff - no agent can skip a step.
 Steps 2-4 repeat for each child bead. When the Guard closes the last
 child, it cascade-closes the parent epic.
 
 Step 5 is human-triggered: you decide when to ship. The Envoy handles
-the mechanics of pushing and PR creation.
+the mechanics. You can also ask Envoy to publish something or anything production related.
+Note, that Envay is banned from force pushing.
 -->
 
 ---
@@ -771,26 +780,22 @@ transition: slide-left
 <!--
 Speaker notes:
 
-This is the proof it works. Let the numbers sink in first.
+Here are some numbers. 
 
-22 merged PRs across 3 Go repositories in about 4 weeks — with zero
-prior Go knowledge. Not "some Go" — literally none.
-
-The feature being built was "Omni in Slack" *click* — an AI assistant
-that integrates into Slack for Outreach customers. It involved streaming
+Last month I was building a feature called "Outreach Omni in Slack" *click* — 
+an AI assistant that integrates into Slack for Outreach customers. It involved streaming
 AI responses in real-time, *click* converting protobuf messages to
 Slack's Block Kit format, *click* resolving citations as deep links,
 and handling multi-org Slack workspaces. *click*
 
-The work wasn't trivial. It included fixing race conditions in an
-identity store *click* — the kind of concurrency bug that trips up
-experienced Go developers. The village model made this possible because
-the AI knows Go idioms even if the developer doesn't.
+I merged 22 PRs across 3 Go repositories in about 4 weeks — with zero
+prior Go knowledge. 
 
-And the full rebrand *click* (Ask Outreach → Omni) touched every
-service, every string, every API endpoint. The kind of tedious
-multi-file rename that's perfect for an AI agent with a structured
-task list.
+The work wasn't trivial. It included fixing race conditions in an
+identity store *click* The village helped me tackle this because
+the AI knows Go idioms even when I don't. *click*
+
+I was still driving this, but the village was doing the heavy lifting.
 -->
 
 ---
@@ -830,27 +835,24 @@ Speaker notes:
 
 This slide maps the success directly back to the village model.
 
-The Mayor *click* turned a vague requirement ("integrate Omni into
-Slack") into structured beads with clear acceptance criteria. Without
-this, the Worker would have been wandering.
+The Mayor *click* helped me break down a complex multi-repo epic
+into small, manageable beads. The requirements and planning were
+already there — the Mayor's job was to structure them into something
+the agents could execute on.
 
 The Worker *click* wrote Go code using the AI's built-in knowledge of
-Go idioms, error handling patterns, goroutine safety. The developer
-just needed to describe WHAT they wanted — the Worker knew HOW to
-express it in Go.
+Go idioms, error handling patterns, goroutine safety. I just needed
+to describe WHAT I wanted — the Worker knew HOW to express it in Go.
 
-The Inspector *click* was critical for a language the developer didn't
-know. It caught non-idiomatic patterns, potential nil pointer
-dereferences, and scope creep where the Worker tried to "improve"
-existing code.
+The Inspector *click* was critical for a language I didn't know. It
+caught non-idiomatic patterns, potential nil pointer dereferences, and
+scope creep where the Worker tried to "improve" existing code.
 
 The Guard *click* ran 860+ tests per package. Every single time.
-Mechanically. No "I'll skip the slow tests this time." This is where
-bugs in concurrent code were caught — tests that the developer might
-not have run locally.
+Mechanically. No "I'll skip the slow tests this time."
 
 The structured handoffs *click* meant nothing went to production without
-passing through Inspector AND Guard. In a language you don't know, this
+passing through Inspector AND Guard. In a language I don't know, this
 safety net is everything.
 
 And beads *click* preserved context across dozens of sessions over 4
@@ -917,24 +919,22 @@ Honest cost: more tokens, slower pipeline. Honest benefit: fewer production inci
 <!--
 Speaker notes:
 
-This is the honesty slide. I put it here deliberately — right after the
-success story — because credibility comes from acknowledging the costs.
+Of course there are drawbacks. 
 
-Token usage: *click* the village burns roughly 3-5x the tokens of a
-single agent for the same output. *click* Every handoff reloads context:
-beads state, skill instructions, the relevant diff. *click* Inspector
-and guard sessions add cost even when the code is straightforward.
+*click* The village burns roughly 3-5x the tokens of a single agent
+for the same output. *click* Every handoff reloads context: beads
+state, skill instructions, the relevant diff. *click* Inspector and
+guard sessions add cost even when the code is straightforward.
 
-Speed: *click* a single bead takes 10-15 minutes through the full
-pipeline. *click* Worker implements (3-5 min), Inspector reviews (2-3
-min), Guard runs checks (3-5 min). A single agent could do all three
-in 2-5 minutes *click* — but without the quality assurance.
+*click* Whereas a single agent would take 2-5 minutes on a task, 
+same bead would take 10-15 minutes to run through the full pipeline.
+*click* Worker implements (3-5 min), Inspector reviews (2-3 min),
+Guard runs checks (3-5 min). A single agent could do all three in
+2-5 minutes *click* — but without the quality assurance.
 
-The tradeoff is conscious. *click* For complex features — like the Go
-work we just talked about — the safety net is absolutely worth it.
-*click* For a one-liner typo fix, it's overkill. The workflow is
-configurable: *click* you can skip Inspector and Guard for trivial
-changes.
+The tradeoff is conscious. *click* For complex features, the it 
+is absolutely worth it. *click* For a one-liner typo fix, it's
+probably an overkill. The workflow is configurable: *click* you can skip steps for trivial changes if you want.
 
 Frame this as "right tool for the job" — not every task needs the
 full pipeline.
@@ -986,19 +986,17 @@ Speaker notes:
 Here are all the links you'll need to get started.
 
 The opencode-village repo is the main plugin — it provides the agents,
-commands, skills, and tools for the village workflow. Install it with
-npx @technoch1ef/opencode-village init.
+commands, skills, and tools for the village workflow. You can install it with npx.
 
-The opencode-beads-rust repo is the Beads integration for OpenCode —
-it hooks br prime into session start and compaction events.
+The opencode-beads-rust repo started as a fork of the original
+opencode-beads plugin, rebuilt to use beads_rust under the hood. So
+instead of the old `bd` command, everything runs through br — frozen fork of beads.
+It's written in Rust and reliable, since the original is Vibe Coded, changes often and I don't think even it's author knows what's going on there at this point.
 
 beads_rust is the underlying Rust CLI that powers the issue tracker.
 It's a standalone tool you can use outside of OpenCode too.
 
 The npm packages are on the public registry — npm install and go.
-
-I'll generate the QR codes before the actual talk so you can scan them
-from your seats.
 -->
 
 ---
